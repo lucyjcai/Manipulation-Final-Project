@@ -1,0 +1,7 @@
+newmtl singleShader
+illum 1
+Kd 1.00 1 1
+Ka 0.1 0.00 0.00
+Tf 0.5 0.5 0.5
+Ni 1
+
