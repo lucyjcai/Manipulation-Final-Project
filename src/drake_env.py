@@ -45,7 +45,7 @@ class TimeStep:
 # DrakeEnv that replicates your teleop scene
 # -------------------------------------------------------------------
 class DrakeEnv:
-    def __init__(self, scenario_string, kp, kd, ki, meshcat=None, dt=0.05):
+    def __init__(self, scenario_string, meshcat=None, dt=0.05):
         self.dt = dt
 
         # ------------------------------------------------------------
