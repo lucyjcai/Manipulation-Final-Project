@@ -1,9 +1,36 @@
 import numpy as np
 from pydrake.all import (
     DiagramBuilder, Simulator, LoadModelDirectives,
-    Parser, ImageRgba8U
+    Parser, ImageRgba8U, LeafSystem, BasicVector, Context, ConstantVectorSource
 )
 from manipulation.station import LoadScenario, MakeHardwareStation
+
+
+class PositionCommandSystem(LeafSystem):
+    def __init__(self):
+        super().__init__()
+        self.DeclareVectorOutputPort(
+            "q_desired",
+            BasicVector(7),
+            self.DoOutput
+        )
+        self.q_desired = np.zeros(7)
+
+    def DoOutput(self, context, output):
+        output.SetFromVector(self.q_desired)
+
+class WSGPositionCommandSystem(LeafSystem):
+    def __init__(self):
+        super().__init__()
+        self.DeclareVectorOutputPort(
+            "wsg_desired",
+            BasicVector(1),
+            self.DoOutput
+        )
+        self.wsg_desired = np.zeros(1)
+
+    def DoOutput(self, context, output):
+        output.SetFromVector(self.wsg_desired)
 
 # -------------------------------------------------------------------
 # dm_control-style TimeStep
@@ -18,7 +45,7 @@ class TimeStep:
 # DrakeEnv that replicates your teleop scene
 # -------------------------------------------------------------------
 class DrakeEnv:
-    def __init__(self, scenario_string, meshcat=None, dt=0.05):
+    def __init__(self, scenario_string, kp, kd, ki, meshcat=None, dt=0.05):
         self.dt = dt
 
         # ------------------------------------------------------------
@@ -33,6 +60,19 @@ class DrakeEnv:
         self.plant = self.station.GetSubsystemByName("plant")
         self.camera_world = self.station.GetSubsystemByName("rgbd_sensor_camera0")
         self.camera_wrist = self.station.GetSubsystemByName("rgbd_sensor_camera1")
+        self.iiwa = self.plant.GetModelInstanceByName("iiwa")
+
+        self.position_cmd = builder.AddSystem(PositionCommandSystem())
+        builder.Connect(
+            self.position_cmd.get_output_port(),
+            self.station.GetInputPort("iiwa.position")
+        )
+
+        self.wsg_cmd = builder.AddSystem(WSGPositionCommandSystem())
+        builder.Connect(
+            self.wsg_cmd.get_output_port(),
+            self.station.GetInputPort("wsg.position")
+        )
 
         self.diagram = builder.Build()
         self.context = self.diagram.CreateDefaultContext()
@@ -95,23 +135,8 @@ class DrakeEnv:
         plant_context = self.station.GetSubsystemContext(self.plant, station_context)
 
         print(target_qpos)
-        # Apply target joint positions directly (position control)
-        # self.plant.SetPositions(plant_context, target_qpos)
-
-        iiwa_model = self.plant.GetModelInstanceByName("iiwa")
-        self.plant.SetPositions(
-            plant_context,
-            iiwa_model,
-            np.array(target_qpos[:7])  # shape must match iiwa num_positions (7)
-        )
-
-        # --- Set WSG positions ---
-        wsg_model = self.plant.GetModelInstanceByName("wsg")
-        self.plant.SetPositions(
-            plant_context,
-            wsg_model,
-            np.array([-target_qpos[-1]/2, target_qpos[-1]/2])  # shape must match wsg num_positions (2 for WSG fingers)
-        )
+        self.position_cmd.q_desired = np.array(target_qpos[:7])
+        self.wsg_cmd.wsg_desired = np.array([target_qpos[-1]])
 
         # Advance simulation by dt
         t = self.context.get_time()
@@ -125,13 +150,13 @@ class DrakeEnv:
     def _physics(self):
         return self
 
-    def render(self, camera_name, height=480, width=640):
-        if camera_name == "camera0":
+    def render(self, camera_id, height=480, width=640):
+        if camera_id == "camera0":
             port = "camera0.rgb_image"
-        elif camera_name == "camera1":
+        elif camera_id == "camera1":
             port = "camera1.rgb_image"
         else:
-            raise ValueError(f"Unknown camera name: {camera_name}")
+            raise ValueError(f"Unknown camera name: {camera_id}")
 
         station_context = self.diagram.GetSubsystemContext(self.station, self.context)
         img: ImageRgba8U = self.station.GetOutputPort(port).Eval(station_context)
