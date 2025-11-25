@@ -60,6 +60,7 @@ class DrakeEnv:
         self.plant = self.station.GetSubsystemByName("plant")
         self.camera_world = self.station.GetSubsystemByName("rgbd_sensor_camera0")
         self.camera_wrist = self.station.GetSubsystemByName("rgbd_sensor_camera1")
+        self.camera_top = self.station.GetSubsystemByName("rgbd_sensor_camera2")
         self.iiwa = self.plant.GetModelInstanceByName("iiwa")
 
         self.position_cmd = builder.AddSystem(PositionCommandSystem())
@@ -87,7 +88,7 @@ class DrakeEnv:
             max_reward = 1.0  # ACT requires this attribute
         self.task = Task()
 
-        self.camera_names = ["camera0", "camera1"]
+        self.camera_names = ["camera0", "camera1", "camera2"]
 
     # -------------------------------------------------------------------
     # Reset the Drake station
@@ -155,6 +156,8 @@ class DrakeEnv:
             port = "camera0.rgb_image"
         elif camera_id == "camera1":
             port = "camera1.rgb_image"
+        elif camera_id == "camera2":
+            port = "camera2.rgb_image"
         else:
             raise ValueError(f"Unknown camera name: {camera_id}")
 
@@ -197,10 +200,11 @@ class DrakeEnv:
         qpos = np.concatenate([q_iiwa, [wsg_width]])
         qvel = np.concatenate([v_iiwa, [wsg_vel]])
 
-        # Capture both cameras
+        # Capture all cameras
         images = {
             "camera0": self.render("camera0"),
             "camera1": self.render("camera1"),
+            "camera2": self.render("camera2"),
         }
 
         obs = dict(qpos=qpos, qvel=qvel, images=images)

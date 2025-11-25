@@ -50,6 +50,7 @@ def trim_file(input_path, T_min):
         images = observations["images"]
         camera0 = images["camera0"][:]
         camera1 = images["camera1"][:]
+        camera2 = images["camera2"][:]
 
         dst.attrs["sim"] = True
 
@@ -61,6 +62,7 @@ def trim_file(input_path, T_min):
         img_grp = obs_grp.create_group("images")
         img_grp.create_dataset("camera0", data=camera0[:T_min], compression="gzip")
         img_grp.create_dataset("camera1", data=camera1[:T_min], compression="gzip")
+        img_grp.create_dataset("camera2", data=camera2[:T_min], compression="gzip")
 
     return output_path
 
