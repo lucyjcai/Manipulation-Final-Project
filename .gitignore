@@ -1,4 +1,5 @@
 .venv/
 .dev_container/
 .vscode/
-src/checkpoints/*.ckpt
+src/checkpoints/
+src/teleop_data/
