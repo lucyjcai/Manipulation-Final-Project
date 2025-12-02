@@ -38,6 +38,12 @@
       <geometry>
         <mesh filename="../meshes/parts/drawer.obj" scale="1 1.98 0.98" />
       </geometry>
+      <contact>
+        <friction>
+          <mu>0.8</mu>
+          <mu2>0.8</mu2>
+        </friction>
+      </contact>
     </collision>
     <inertial>
       <mass value="0.2" />
@@ -68,6 +74,12 @@
       <geometry>
         <mesh filename="../meshes/parts/drawer.obj" scale="1 1.98 0.98" />
       </geometry>
+      <contact>
+        <friction>
+          <mu>0.8</mu>
+          <mu2>0.8</mu2>
+        </friction>
+      </contact>
     </collision>
     <inertial>
       <mass value="0.2" />
@@ -99,6 +111,12 @@
       <geometry>
         <mesh filename="../meshes/parts/drawer.obj" scale="1 1.98 0.98" />
       </geometry>
+      <contact>
+        <friction>
+          <mu>0.8</mu>
+          <mu2>0.8</mu2>
+        </friction>
+      </contact>
     </collision>
     <inertial>
       <mass value="0.2" />
@@ -130,6 +148,12 @@
       <geometry>
         <mesh filename="../meshes/parts/drawer.obj" scale="1 1.98 0.98" />
       </geometry>
+      <contact>
+        <friction>
+          <mu>0.8</mu>
+          <mu2>0.8</mu2>
+        </friction>
+      </contact>
     </collision>
     <inertial>
       <mass value="0.2" />
@@ -191,6 +215,12 @@
       <geometry>
         <mesh filename="../meshes/parts/handle.obj" scale="1 1 1" />
       </geometry>
+      <contact>
+        <friction>
+          <mu>0.8</mu>
+          <mu2>0.8</mu2>
+        </friction>
+      </contact>
     </collision>
     <inertial>
       <mass value="0.2" />
@@ -220,6 +250,12 @@
       <geometry>
         <mesh filename="../meshes/parts/handle.obj" scale="1 1 1" />
       </geometry>
+      <contact>
+        <friction>
+          <mu>0.8</mu>
+          <mu2>0.8</mu2>
+        </friction>
+      </contact>
     </collision>
     <inertial>
       <mass value="0.2" />
@@ -249,6 +285,12 @@
       <geometry>
         <mesh filename="../meshes/parts/handle.obj" scale="1 1 1" />
       </geometry>
+      <contact>
+        <friction>
+          <mu>0.8</mu>
+          <mu2>0.8</mu2>
+        </friction>
+      </contact>
     </collision>
     <inertial>
       <mass value="0.2" />
@@ -278,6 +320,12 @@
       <geometry>
         <mesh filename="../meshes/parts/handle.obj" scale="1 1 1" />
       </geometry>
+      <contact>
+        <friction>
+          <mu>0.8</mu>
+          <mu2>0.8</mu2>
+        </friction>
+      </contact>
     </collision>
     <inertial>
       <mass value="0.2" />
@@ -307,6 +355,12 @@
       <geometry>
         <mesh filename="../meshes/parts/handle.obj" scale="1 1 1" />
       </geometry>
+      <contact>
+        <friction>
+          <mu>0.8</mu>
+          <mu2>0.8</mu2>
+        </friction>
+      </contact>
     </collision>
     <inertial>
       <mass value="0.2" />
