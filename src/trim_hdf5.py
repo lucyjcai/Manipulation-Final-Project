@@ -4,11 +4,7 @@ import sys
 from pathlib import Path
 
 # ---------- USER INPUT ----------
-input_files = [
-    "teleop_data/sim_open_drawer/episode_0.hdf5",
-    "teleop_data/sim_open_drawer/episode_1.hdf5",
-    "teleop_data/sim_open_drawer/episode_2.hdf5",
-]
+input_files = [f"teleop_data/sim_open_drawer/episode_{i}_label{j}.hdf5" for i in range(30) for j in [31, 53, 62]]
 # --------------------------------
 
 
@@ -67,11 +63,11 @@ def trim_file(input_path, T_min):
     return output_path
 
 
-output_paths = [trim_file(f, T_min) for f in input_files]
+# output_paths = [trim_file(f, T_min) for f in input_files]
 
-print("\nDone!")
-print("Trimmed files:")
-for p in output_paths:
-    print(" -", p)
+# print("\nDone!")
+# print("Trimmed files:")
+# for p in output_paths:
+#     print(" -", p)
 
 print(f"\nUnified sequence length: {T_min}")
